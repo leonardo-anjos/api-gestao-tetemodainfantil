@@ -1,99 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# api-gestao-tetemodainfantil
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### **Produtos (Products)**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A **gestão de produtos** envolve ações relacionadas ao cadastro, atualização, listagem e filtragem de vestidos, com foco na estrutura de vendas no varejo e atacado. Cada produto tem informações essenciais como nome, coleção, cor, tamanho, preço, foto e quantidade em estoque.
 
-## Description
+#### 1. **Cadastro de Produtos**
+   - **Objetivo**: Permitir o cadastro de novos vestidos na loja.
+   - **Campos**:
+     - **Name**: Nome do vestido.
+     - **Collection**: Coleção à qual o vestido pertence.
+     - **Color**: Cor do vestido.
+     - **Size**: Tamanho do vestido (ex: P, M, G).
+     - **Price**: Preço do vestido.
+     - **PhotoUrl**: URL da foto do vestido.
+     - **Stock**: Quantidade disponível em estoque.
+   - **Método**: `POST /products`
+   - **Descrição**: O sistema recebe os dados e cria um novo produto no banco de dados.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+#### 2. **Listagem de Produtos**
+   - **Objetivo**: Exibir todos os produtos cadastrados na loja.
+   - **Método**: `GET /products`
+   - **Descrição**: Retorna uma lista de todos os produtos cadastrados na loja, com todas as informações de cada vestido (nome, coleção, cor, etc.).
 
-## Project setup
+#### 3. **Filtragem de Produtos**
+   - **Objetivo**: Permitir a filtragem de produtos por atributos como coleção, cor, tamanho, etc.
+   - **Método**: `GET /products/filter`
+   - **Descrição**: Permite realizar buscas com parâmetros como `collection`, `color`, `size`, etc. Exemplo de query:
+     - `/products/filter?collection=Verão2024&color=Rosa`
+   - **Campos**:
+     - **Collection**: Filtra produtos por coleção.
+     - **Color**: Filtra produtos por cor.
+     - **Size**: Filtra produtos por tamanho.
+     - **PriceRange**: Filtra produtos por faixa de preço.
 
-```bash
-$ npm install
-```
+#### 4. **Atualização de Estoque**
+   - **Objetivo**: Permitir a atualização da quantidade em estoque de um vestido.
+   - **Método**: `PUT /products/:id/stock`
+   - **Descrição**: Atualiza a quantidade de estoque de um produto específico. O ID do produto é fornecido na URL.
+   - **Campos**:
+     - **Stock**: Novo valor de estoque.
 
-## Compile and run the project
+#### 5. **Exclusão de Produto**
+   - **Objetivo**: Permitir a remoção de um vestido do estoque.
+   - **Método**: `DELETE /products/:id`
+   - **Descrição**: Remove um produto do banco de dados, identificando-o pelo seu `id`.
 
-```bash
-# development
-$ npm run start
+#### 6. **Visualização Detalhada de Produto**
+   - **Objetivo**: Permitir a visualização detalhada de um produto específico.
+   - **Método**: `GET /products/:id`
+   - **Descrição**: Retorna os detalhes completos de um vestido específico, identificando-o pelo `id`.
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+### **Vendas (Sales)**
 
-## Run tests
+A **gestão de vendas** envolve o registro das compras realizadas pelos clientes, seja no modelo de varejo ou atacado. Cada venda contém informações sobre os produtos comprados, o pagamento, e os dados do cliente.
 
-```bash
-# unit tests
-$ npm run test
+#### 1. **Registro de Venda**
+   - **Objetivo**: Registrar uma nova venda na loja, com os produtos comprados e dados do cliente.
+   - **Campos**:
+     - **BuyerName**: Nome do comprador.
+     - **BuyerPhone**: Número de telefone do comprador (para envio de mensagem no WhatsApp).
+     - **SaleType**: Tipo de venda (ex: varejo ou atacado).
+     - **PaymentType**: Tipo de pagamento (ex: dinheiro, cartão, pix).
+     - **Installments**: Número de parcelas (se for pagamento parcelado).
+     - **Products**: Lista de produtos comprados, incluindo nome, preço e quantidade.
+     - **TotalAmount**: Valor total da venda.
+     - **SaleDate**: Data da venda.
+   - **Método**: `POST /sales`
+   - **Descrição**: Cria uma nova venda, incluindo a atualização do estoque (diminuindo a quantidade de produtos) e o envio de mensagem de agradecimento via WhatsApp.
 
-# e2e tests
-$ npm run test:e2e
+#### 2. **Confirmação de Pagamento**
+   - **Objetivo**: Confirmar o pagamento de uma venda.
+   - **Método**: `PUT /sales/:id/confirm-payment`
+   - **Descrição**: Marca o pagamento de uma venda como confirmado. Isso pode ser feito manualmente após o cliente efetuar o pagamento.
+   - **Campos**:
+     - **PaymentConfirmed**: Booleano para indicar se o pagamento foi confirmado.
 
-# test coverage
-$ npm run test:cov
-```
+#### 3. **Listagem de Vendas**
+   - **Objetivo**: Exibir todas as vendas realizadas na loja.
+   - **Método**: `GET /sales`
+   - **Descrição**: Retorna uma lista de todas as vendas realizadas, com informações sobre os produtos vendidos, dados do cliente e status de pagamento.
 
-## Deployment
+#### 4. **Filtragem de Vendas**
+   - **Objetivo**: Permitir a filtragem de vendas por parâmetros como tipo de venda, tipo de pagamento e data.
+   - **Método**: `GET /sales/filter`
+   - **Descrição**: Filtra as vendas por parâmetros como `saleType`, `paymentType`, `saleDate`, etc.
+     - Exemplo de query:
+       - `/sales/filter?saleType=varejo&paymentType=cartao`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+#### 5. **Detalhes de Venda**
+   - **Objetivo**: Permitir a visualização detalhada de uma venda específica.
+   - **Método**: `GET /sales/:id`
+   - **Descrição**: Exibe detalhes completos de uma venda, incluindo produtos comprados, informações do cliente e status do pagamento.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+#### 6. **Envio de Agradecimento via WhatsApp**
+   - **Objetivo**: Enviar uma mensagem personalizada de agradecimento ao cliente após a compra.
+   - **Método**: Enviado automaticamente após a criação da venda.
+   - **Descrição**: Envia uma mensagem de agradecimento para o cliente, com base nas informações fornecidas, como nome do comprador e total da compra.
+   - **Exemplo de mensagem**:
+     - `Olá João Silva, agradecemos pela sua compra de 2 vestidos no valor total de R$300.00. Esperamos que você adore suas novas peças!`
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+---
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Fluxo Completo de Venda e Gestão de Produtos
 
-## Resources
+1. **Cadastro de Produto**:
+   - O administrador cadastra novos vestidos, definindo todos os detalhes (nome, coleção, cor, preço, estoque, etc.).
 
-Check out a few resources that may come in handy when working with NestJS:
+2. **Realização de Venda**:
+   - O cliente realiza a compra de vestidos, podendo escolher entre **varejo** ou **atacado**.
+   - O sistema atualiza o estoque automaticamente, diminuindo a quantidade disponível para cada vestido comprado.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+3. **Pagamento e Confirmação**:
+   - O pagamento é realizado via **dinheiro**, **cartão** ou **pix**, e o administrador pode confirmar manualmente se o pagamento foi realizado com sucesso.
 
-## Support
+4. **Envio de Mensagem via WhatsApp**:
+   - Após a compra, o sistema envia uma mensagem de agradecimento via WhatsApp ao cliente, utilizando a API do WhatsApp configurada.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+5. **Monitoramento de Vendas**:
+   - O administrador pode listar, filtrar e visualizar detalhes das vendas realizadas, acompanhar o status do pagamento e ver quais produtos estão mais vendidos.
