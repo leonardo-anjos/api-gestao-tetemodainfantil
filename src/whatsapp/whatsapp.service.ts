@@ -1,34 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import { Twilio } from 'twilio';
 
 @Injectable()
 export class WhatsappService {
-  async sendThankYouMessage(phone: string) {
-    const message = 'Obrigado pela sua compra! Apreciamos muito o seu apoio.';
-    const twilioAccountSid = 'YOUR_TWILIO_ACCOUNT_SID';
-    const twilioAuthToken = 'YOUR_TWILIO_AUTH_TOKEN';
-    const twilioPhoneNumber = 'YOUR_TWILIO_PHONE_NUMBER';
-  
-    const url = `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`;
-  
+  private twilioClient: Twilio;
+
+  constructor() {
+    // Configuração do Twilio
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;  // Sua Account SID do Twilio
+    const authToken = process.env.TWILIO_AUTH_TOKEN;    // Seu Auth Token do Twilio
+    const whatsappFromNumber = 'whatsapp:+14155238886'; // Número do WhatsApp fornecido pelo Twilio
+
+    // Inicializar o cliente Twilio
+    this.twilioClient = new Twilio(accountSid, authToken);
+  }
+
+  // Método para enviar mensagem personalizada
+  async sendCustomMessage(toPhone: string, message: string): Promise<any> {
     try {
-      const response = await axios.post(
-        url,
-        new URLSearchParams({
-          To: `whatsapp:${phone}`, 
-          From: `whatsapp:${twilioPhoneNumber}`,
-          Body: message,
-        }),
-        {
-          auth: {
-            username: twilioAccountSid,
-            password: twilioAuthToken,
-          },
-        }
-      );
-      console.log('Mensagem de agradecimento enviada:', response.data);
+      const response = await this.twilioClient.messages.create({
+        body: message,  // Mensagem que você deseja enviar
+        from: 'whatsapp:+14155238886',  // O número do WhatsApp configurado no Twilio
+        to: `whatsapp:${toPhone}`,  // O número do destinatário (com prefixo whatsapp:)
+      });
+      return response;
     } catch (error) {
-      console.error('Erro ao enviar mensagem de agradecimento:', error);
+      console.error('Error sending WhatsApp message:', error);
+      throw new Error('Failed to send WhatsApp message');
     }
   }
 }

@@ -7,28 +7,32 @@ export type SaleDocument = Sale & Document;
 @Schema()
 export class Sale {
   @Prop({ required: true })
-  buyerName: string; 
+  buyerName: string;
 
   @Prop({ required: true })
-  buyerPhone: string; 
+  buyerPhone: string;
 
   @Prop({ required: true })
-  saleType: 'atacado' | 'varejo'; 
+  saleType: 'atacado' | 'varejo';
 
   @Prop({ required: true })
-  paymentType: 'dinheiro' | 'cartao' | 'pix'; 
+  paymentType: 'dinheiro' | 'cartao' | 'pix';
 
   @Prop({ required: false })
-  installments: number; 
+  installments: number;
 
   @Prop({ required: true })
-  products: Product[]; 
+  products: Product[];
 
   @Prop({ required: true })
-  totalAmount: number; 
+  totalAmount: number;
 
   @Prop({ required: true })
-  saleDate: Date; 
+  saleDate: Date;
+
+  // Adicionando a propriedade paymentConfirmed
+  @Prop({ default: false })
+  paymentConfirmed: boolean;
 }
 
 export const SaleSchema = SchemaFactory.createForClass(Sale);
