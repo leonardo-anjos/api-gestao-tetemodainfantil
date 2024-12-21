@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Product } from './product.schema';
+import { ProductsService } from './products.service';
 
 @Controller('products')
 export class ProductsController {
@@ -14,11 +14,6 @@ export class ProductsController {
   @Get()
   findAll(): Promise<Product[]> {
     return this.productsService.findAll();
-  }
-
-  @Get('search/:query')
-  findProductByNameOrCollection(@Param('query') query: string): Promise<Product[]> {
-    return this.productsService.findProductByNameOrCollection(query);
   }
 
   @Put(':id')
@@ -35,9 +30,9 @@ export class ProductsController {
   adjustStock(@Param('id') id: string, @Body('quantity') quantity: number): Promise<Product> {
     return this.productsService.adjustStock(id, quantity);
   }
-
-  @Get(':id/availability/:quantity')
-  checkAvailability(@Param('id') id: string, @Param('quantity') quantity: number): Promise<boolean> {
-    return this.productsService.checkProductAvailability(id, quantity);
+  
+  @Get('search/:query')
+  findProductByNameOrCollection(@Param('query') query: string): Promise<Product[]> {
+    return this.productsService.findProductByNameOrCollection(query);
   }
 }

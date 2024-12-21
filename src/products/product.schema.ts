@@ -20,11 +20,11 @@ export class Product {
   @Prop({ required: true })
   price: number;
 
-  @Prop({ required: false })
-  base64Image: string;
-
   @Prop({ default: 0 })
   stock: number;
+
+  @Prop({ required: false })
+  base64Image: string;
 
   _id: Types.ObjectId;
 

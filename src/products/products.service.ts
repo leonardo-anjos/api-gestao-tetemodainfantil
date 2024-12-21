@@ -34,7 +34,7 @@ export class ProductsService {
 
   async updateProduct(productId: string, updateDto: any): Promise<Product> {
     const updatedProduct = await this.productModel.findByIdAndUpdate(productId, updateDto, {
-      new: true, // Retorna o documento atualizado
+      new: true, 
     });
     if (!updatedProduct) {
       throw new Error('Product not found');
@@ -54,25 +54,19 @@ export class ProductsService {
     if (!product) {
       throw new Error('Product not found');
     }
-
-    product.stock += quantity; // Ajusta o estoque (quantidade pode ser positiva ou negativa)
-    return product.save();
-  }
-
-  async checkProductAvailability(productId: string, quantity: number): Promise<boolean> {
-    const product = await this.productModel.findById(productId);
-    if (!product) {
-      throw new Error('Product not found');
-    }
-
-    return product.stock >= quantity; // Verifica se o estoque é suficiente
+  
+    product.stock = quantity;
+  
+    await product.save();
+  
+    return product;
   }
 
   async findProductByNameOrCollection(searchQuery: string): Promise<Product[]> {
     return this.productModel.find({
       $or: [
         { name: { $regex: searchQuery, $options: 'i' } },
-        { collection: { $regex: searchQuery, $options: 'i' } }
+        { collection: { $regex: searchQuery, $options: 'i' } },
       ]
     }).exec();
   }
