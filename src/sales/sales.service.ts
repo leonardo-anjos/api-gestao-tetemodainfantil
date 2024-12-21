@@ -28,8 +28,8 @@ export class SalesService {
     await sale.save();
 
     // Atualiza o estoque após a venda
-    createSaleDto.products.forEach(async (product: Product) => {
-      await this.productsService.updateStock(product.id, {
+    createSaleDto.products.forEach(async (product: any) => {
+      await this.productsService.updateStock(product._id, {
         stock: product.stock - 1,
       });
     });
@@ -102,16 +102,15 @@ export class SalesService {
     return sales.reduce((total, sale) => total + sale.totalAmount, 0);
   }
 
-  // Novo: Confirma o pagamento de uma venda
-  async confirmPayment(saleId: string): Promise<Sale> {
-    const sale = await this.saleModel.findById(saleId);
+  async confirmPayment(id: string) {
+    const sale = await this.saleModel.findById(id);
     if (!sale) {
       throw new Error('Sale not found');
     }
-
-    sale.paymentConfirmed = true;
+    sale.paymentConfirmed = true; // Marca o pagamento como confirmado
     return sale.save();
   }
+  
 
   // Novo: Envia um resumo de vendas para um WhatsApp (pode ser um relatório)
   async sendSalesReport(buyerPhone: string): Promise<void> {
@@ -119,4 +118,74 @@ export class SalesService {
     const message = `Total Sales: $${totalSales.toFixed(2)}`;
     this.whatsappService.sendCustomMessage(buyerPhone, message);
   }
+
+  async getSalesGroupedByType() {
+    return this.saleModel.aggregate([
+      {
+        $group: {
+          _id: '$saleType',  // Agrupando pelo tipo de venda (atacado ou varejo)
+          totalSales: { $sum: 1 },  // Contando o número de vendas
+          totalAmount: { $sum: '$totalAmount' },  // Somando o valor total das vendas
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          saleType: '$_id',
+          totalSales: 1,
+          totalAmount: 1,
+        },
+      },
+    ]);
+  }
+
+  async getSalesReportByPeriod(startDate: string, endDate: string) {
+    return this.saleModel.aggregate([
+      {
+        $match: {
+          saleDate: { 
+            $gte: new Date(startDate),
+            $lte: new Date(endDate),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$saleType',
+          totalSales: { $sum: 1 },
+          totalAmount: { $sum: '$totalAmount' },
+        },
+      },
+    ]);
+  }
+
+  async getSalesReportByProduct() {
+    return this.saleModel.aggregate([
+      { $unwind: '$products' },
+      {
+        $group: {
+          _id: '$products.name', // Agrupa por nome do produto
+          totalQuantity: { $sum: 1 },
+          totalAmount: { $sum: '$totalAmount' },
+        },
+      },
+    ]);
+  }
+
+  async getSalesByPaymentType() {
+    return this.saleModel.aggregate([
+      {
+        $group: {
+          _id: '$paymentType',  // Agrupa por tipo de pagamento
+          totalSales: { $sum: 1 },
+          totalAmount: { $sum: '$totalAmount' },
+        },
+      },
+    ]);
+  }
+
+  async getUnconfirmedSales() {
+    return this.saleModel.find({ paymentConfirmed: false }).exec();
+  }
+  
 }

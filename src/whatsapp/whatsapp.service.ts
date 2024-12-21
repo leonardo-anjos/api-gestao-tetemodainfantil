@@ -18,12 +18,18 @@ export class WhatsappService {
   // Método para enviar mensagem personalizada
   async sendCustomMessage(toPhone: string, message: string): Promise<any> {
     try {
-      const response = await this.twilioClient.messages.create({
-        body: message,  // Mensagem que você deseja enviar
-        from: 'whatsapp:+14155238886',  // O número do WhatsApp configurado no Twilio
-        to: `whatsapp:${toPhone}`,  // O número do destinatário (com prefixo whatsapp:)
+      console.log({
+        body: message,  
+        from: 'whatsapp:+14155238886',
+        to: `whatsapp:+55${toPhone}`,
       });
-      return response;
+
+      // const response = await this.twilioClient.messages.create({
+      //   body: message,  // Mensagem que você deseja enviar
+      //   from: 'whatsapp:+14155238886',  // O número do WhatsApp configurado no Twilio
+      //   to: `whatsapp:+55${toPhone}`,  // O número do destinatário (com prefixo whatsapp:)
+      // });
+      // return response;
     } catch (error) {
       console.error('Error sending WhatsApp message:', error);
       throw new Error('Failed to send WhatsApp message');
