@@ -30,7 +30,7 @@ export class SalesService {
     await sale.save();
 
     createSaleDto.products.forEach(async (product: Product) => {
-      const productInStock = await this.productsService.updateStock(product.id, {
+      await this.productsService.updateStock(product.id, {
         stock: product.stock - 1, 
       });
     });
