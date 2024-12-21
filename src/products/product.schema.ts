@@ -15,13 +15,13 @@ export class Product {
   color: string;
 
   @Prop({ required: true })
-  size: string;
+  size: number;
 
   @Prop({ required: true })
   price: number;
 
-  @Prop({ required: true })
-  photoUrl: string;
+  @Prop({ required: false })
+  base64Image: string;
 
   @Prop({ default: 0 })
   stock: number;
