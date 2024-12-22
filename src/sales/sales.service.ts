@@ -14,32 +14,47 @@ export class SalesService {
     private readonly whatsappService: WhatsappService,
   ) {}
 
-  async create(createSaleDto: any): Promise<Sale> {
+  async create(createSaleDto: any): Promise<any> {
     const totalAmount = createSaleDto.products.reduce(
-      (sum, product: Product) => sum + product.price,
+      (sum, product: any) => sum + product.price * product.quantity,
       0,
     );
-
+  
+    for (const product of createSaleDto.products) {
+      const productData = await this.productsService.findById(product.id);
+      
+      if (!productData) {
+        throw new Error(`Produto com ID ${product.id} não encontrado.`);
+      }
+  
+      if (productData.stock < product.quantity) {
+        throw new Error(`Estoque insuficiente para o produto ${product.name} (cor: ${product.color}, tamanho: ${product.size}). Estoque disponível: ${productData.stock}.`);
+      }
+    }
+  
+    for (const product of createSaleDto.products) {
+      const productData = await this.productsService.findById(product.id);
+  
+      if (!productData) {
+        throw new Error(`Produto com ID ${product.id} não encontrado.`);
+      }
+  
+      const updatedStock = productData.stock - product.quantity;
+      await this.productsService.updateProduct(product.id, { stock: updatedStock });
+    }
+  
     const sale = new this.saleModel({
       ...createSaleDto,
       totalAmount,
       saleDate: new Date(),
     });
-
+  
     await sale.save();
-
-    createSaleDto.products.forEach(async (product: any) => {
-      const { stock } = await this.productsService.findById(product.id);
-
-      await this.productsService.updateProduct(product.id, {
-        stock: stock - 1,
-      });
-    });
-
+  
     const message = `Olá ${createSaleDto.buyerName}, agradecemos pela sua compra de ${createSaleDto.products.length} item(s) no valor total de R$${totalAmount}.`;
     await this.whatsappService.sendCustomMessage(createSaleDto.buyerPhone, message);
-
-    return sale;
+  
+    return { message: "Venda criada com sucesso", sale, totalAmount };
   }
 
   // async findAll(): Promise<Sale[]> {
