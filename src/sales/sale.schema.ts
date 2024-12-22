@@ -23,16 +23,6 @@ export class Sale {
 
   @Prop({ required: true })
   products: Product[];
-
-  @Prop({ required: true })
-  totalAmount: number;
-
-  @Prop({ required: true })
-  saleDate: Date;
-
-  // Adicionando a propriedade paymentConfirmed
-  @Prop({ default: false })
-  paymentConfirmed: boolean;
 }
 
 export const SaleSchema = SchemaFactory.createForClass(Sale);

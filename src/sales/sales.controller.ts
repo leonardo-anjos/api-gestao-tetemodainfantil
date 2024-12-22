@@ -11,71 +11,71 @@ export class SalesController {
     return this.salesService.create(createSaleDto);
   }
 
-  @Get()
-  findAll(): Promise<Sale[]> {
-    return this.salesService.findAll();
-  }
+  // @Get()
+  // findAll(): Promise<Sale[]> {
+  //   return this.salesService.findAll();
+  // }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateSaleDto: any): Promise<Sale> {
-    return this.salesService.updateSale(id, updateSaleDto);
-  }
+  // @Put(':id')
+  // update(@Param('id') id: string, @Body() updateSaleDto: any): Promise<Sale> {
+  //   return this.salesService.updateSale(id, updateSaleDto);
+  // }
 
-  @Delete(':id')
-  cancel(@Param('id') id: string): Promise<void> {
-    return this.salesService.cancelSale(id);
-  }
+  // @Delete(':id')
+  // cancel(@Param('id') id: string): Promise<void> {
+  //   return this.salesService.cancelSale(id);
+  // }
 
-  @Get('type/:saleType')
-  findSalesByType(@Param('saleType') saleType: 'atacado' | 'varejo'): Promise<Sale[]> {
-    return this.salesService.findSalesByType(saleType);
-  }
+  // @Get('type/:saleType')
+  // findSalesByType(@Param('saleType') saleType: 'atacado' | 'varejo'): Promise<Sale[]> {
+  //   return this.salesService.findSalesByType(saleType);
+  // }
 
-  @Get('date/:date')
-  findSalesByDate(@Param('date') date: string): Promise<Sale[]> {
-    return this.salesService.findSalesByDate(date);
-  }
+  // @Get('date/:date')
+  // findSalesByDate(@Param('date') date: string): Promise<Sale[]> {
+  //   return this.salesService.findSalesByDate(date);
+  // }
 
-  @Get('total')
-  getTotalSales(): Promise<number> {
-    return this.salesService.getTotalSales();
-  }
+  // @Get('total')
+  // getTotalSales(): Promise<number> {
+  //   return this.salesService.getTotalSales();
+  // }
 
-  @Put('confirm-payment/:id')
-  confirmPayment(@Param('id') id: string): Promise<Sale> {
-    return this.salesService.confirmPayment(id);
-  }
+  // @Put('confirm-payment/:id')
+  // confirmPayment(@Param('id') id: string): Promise<Sale> {
+  //   return this.salesService.confirmPayment(id);
+  // }
 
-  @Post('report')
-  sendReport(@Body('buyerPhone') buyerPhone: string): Promise<void> {
-    return this.salesService.sendSalesReport(buyerPhone);
-  }
+  // @Post('report')
+  // sendReport(@Body('buyerPhone') buyerPhone: string): Promise<void> {
+  //   return this.salesService.sendSalesReport(buyerPhone);
+  // }
 
-  @Get('grouped-by-type')
-  async getSalesGroupedByType() {
-    return this.salesService.getSalesGroupedByType();
-  }
+  // @Get('grouped-by-type')
+  // async getSalesGroupedByType() {
+  //   return this.salesService.getSalesGroupedByType();
+  // }
 
-  @Get('report-by-period')
-  async getSalesReportByPeriod(
-    @Query('startDate') startDate: string, 
-    @Query('endDate') endDate: string
-  ) {
-    return this.salesService.getSalesReportByPeriod(startDate, endDate);
-  }
+  // @Get('report-by-period')
+  // async getSalesReportByPeriod(
+  //   @Query('startDate') startDate: string, 
+  //   @Query('endDate') endDate: string
+  // ) {
+  //   return this.salesService.getSalesReportByPeriod(startDate, endDate);
+  // }
 
-  @Get('product-report')
-  async getSalesReportByProduct() {
-    return this.salesService.getSalesReportByProduct();
-  }
+  // @Get('product-report')
+  // async getSalesReportByProduct() {
+  //   return this.salesService.getSalesReportByProduct();
+  // }
 
-  @Get('payment-type')
-  async getSalesByPaymentType() {
-    return this.salesService.getSalesByPaymentType();
-  }
+  // @Get('payment-type')
+  // async getSalesByPaymentType() {
+  //   return this.salesService.getSalesByPaymentType();
+  // }
 
-  @Get('unconfirmed')
-  async getUnconfirmedSales() {
-    return this.salesService.getUnconfirmedSales();
-  }
+  // @Get('unconfirmed')
+  // async getUnconfirmedSales() {
+  //   return this.salesService.getUnconfirmedSales();
+  // }
 }
