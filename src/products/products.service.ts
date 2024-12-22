@@ -62,12 +62,26 @@ export class ProductsService {
     return product;
   }
 
-  async findProductByNameOrCollection(searchQuery: string): Promise<Product[]> {
-    return this.productModel.find({
-      $or: [
-        { name: { $regex: searchQuery, $options: 'i' } },
-        { collection: { $regex: searchQuery, $options: 'i' } },
-      ]
-    }).exec();
+  // Método para agrupar produtos por nome, cor e tamanho, e contar as quantidades
+  async groupProductsByColorAndSize(name: string) {
+    const result = await this.productModel.aggregate([
+      { $match: { name: { $regex: name, $options: 'i' } } }, // Filtro pelo nome do produto
+      {
+        $group: {
+          _id: { color: "$color", size: "$size" }, // Agrupar por cor e tamanho
+          totalStock: { $sum: "$stock" }, // Contar a quantidade de estoque de cada combinação
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          color: "$_id.color", // Exibir as cores e tamanhos
+          size: "$_id.size",
+          totalStock: 1, // Exibir a quantidade total de estoque
+        }
+      }
+    ]);
+
+    return result;
   }
 }
