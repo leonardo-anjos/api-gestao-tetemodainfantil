@@ -57,41 +57,32 @@ export class SalesService {
     return { message: "Venda criada com sucesso", sale, totalAmount };
   }
 
-  // async findAll(): Promise<Sale[]> {
-  //   return this.saleModel.find().exec();
-  // }
+  async findAll(): Promise<Sale[]> {
+    return this.saleModel.find().exec();
+  }
 
-  // // Novo: Atualiza uma venda existente
-  // async updateSale(saleId: string, updateSaleDto: any): Promise<Sale> {
-  //   const updatedSale = await this.saleModel.findByIdAndUpdate(saleId, updateSaleDto, {
-  //     new: true,
-  //   });
+  async cancelSale(saleId: string): Promise<void> {
+    const sale = await this.saleModel.findById(saleId);
 
-  //   if (!updatedSale) {
-  //     throw new Error('Sale not found');
-  //   }
+    if (!sale) {
+      throw new Error('Sale not found');
+    }
 
-  //   return updatedSale;
-  // }
+    for (const product of sale.products) {
+      const productData = await this.productsService.findById(product.id);
 
-  // // Novo: Cancela uma venda e ajusta o estoque
-  // async cancelSale(saleId: string): Promise<void> {
-  //   const sale = await this.saleModel.findById(saleId);
+      if (!productData) {
+        throw new Error(`Produto com ID ${product.id} não encontrado`);
+      }
 
-  //   if (!sale) {
-  //     throw new Error('Sale not found');
-  //   }
+      await this.productsService.updateProduct(product.id, {
+        stock: productData.stock + 1
+      });
+    }
 
-  //   // Reverte o estoque dos produtos vendidos
-  //   sale.products.forEach(async (product: Product) => {
-  //     await this.productsService.updateStock(product.id, {
-  //       stock: product.stock + 1, // Aumenta o estoque
-  //     });
-  //   });
+    await this.saleModel.findByIdAndDelete(saleId);
+  }
 
-  //   // Deleta a venda
-  //   await this.saleModel.findByIdAndDelete(saleId);
-  // }
 
   // // Novo: Filtra vendas por tipo (atacado ou varejo)
   // async findSalesByType(saleType: 'atacado' | 'varejo'): Promise<Sale[]> {

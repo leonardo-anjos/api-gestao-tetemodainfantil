@@ -11,20 +11,15 @@ export class SalesController {
     return this.salesService.create(createSaleDto);
   }
 
-  // @Get()
-  // findAll(): Promise<Sale[]> {
-  //   return this.salesService.findAll();
-  // }
+  @Get()
+  findAll(): Promise<Sale[]> {
+    return this.salesService.findAll();
+  }
 
-  // @Put(':id')
-  // update(@Param('id') id: string, @Body() updateSaleDto: any): Promise<Sale> {
-  //   return this.salesService.updateSale(id, updateSaleDto);
-  // }
-
-  // @Delete(':id')
-  // cancel(@Param('id') id: string): Promise<void> {
-  //   return this.salesService.cancelSale(id);
-  // }
+  @Delete(':id')
+  cancel(@Param('id') id: string): Promise<void> {
+    return this.salesService.cancelSale(id);
+  }
 
   // @Get('type/:saleType')
   // findSalesByType(@Param('saleType') saleType: 'atacado' | 'varejo'): Promise<Sale[]> {
