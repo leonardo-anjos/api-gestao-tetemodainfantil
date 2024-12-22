@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Product } from './product.schema';
 import { ProductsService } from './products.service';
 
@@ -16,19 +16,14 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: any): Promise<Product> {
-    return this.productsService.updateProduct(id, updateProductDto);
+  @Patch(':id')
+  async updateProduct(@Param('id') id: string, @Body() updateDto: Partial<Product>): Promise<Product> {
+    return this.productsService.updateProduct(id, updateDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string): Promise<void> {
     return this.productsService.deleteProduct(id);
-  }
-
-  @Put(':id/stock')
-  adjustStock(@Param('id') id: string, @Body('quantity') quantity: number): Promise<Product> {
-    return this.productsService.adjustStock(id, quantity);
   }
 
   @Get('group-by-color-size')

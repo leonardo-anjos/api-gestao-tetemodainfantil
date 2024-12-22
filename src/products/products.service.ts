@@ -32,10 +32,8 @@ export class ProductsService {
     return product.save();
   }
 
-  async updateProduct(productId: string, updateDto: any): Promise<Product> {
-    const updatedProduct = await this.productModel.findByIdAndUpdate(productId, updateDto, {
-      new: true, 
-    });
+  async updateProduct(id: string, updateDto: Partial<Product>): Promise<Product> {
+    const updatedProduct = await this.productModel.findByIdAndUpdate(id, updateDto, { new: true });
     if (!updatedProduct) {
       throw new Error('Product not found');
     }
@@ -49,35 +47,21 @@ export class ProductsService {
     }
   }
 
-  async adjustStock(productId: string, quantity: number): Promise<Product> {
-    const product = await this.productModel.findById(productId);
-    if (!product) {
-      throw new Error('Product not found');
-    }
-  
-    product.stock = quantity;
-  
-    await product.save();
-  
-    return product;
-  }
-
-  // Método para agrupar produtos por nome, cor e tamanho, e contar as quantidades
   async groupProductsByColorAndSize(name: string) {
     const result = await this.productModel.aggregate([
-      { $match: { name: { $regex: name, $options: 'i' } } }, // Filtro pelo nome do produto
+      { $match: { name: { $regex: name, $options: 'i' } } },
       {
         $group: {
-          _id: { color: "$color", size: "$size" }, // Agrupar por cor e tamanho
-          totalStock: { $sum: "$stock" }, // Contar a quantidade de estoque de cada combinação
+          _id: { color: "$color", size: "$size" },
+          totalStock: { $sum: "$stock" },
         }
       },
       {
         $project: {
           _id: 0,
-          color: "$_id.color", // Exibir as cores e tamanhos
+          color: "$_id.color",
           size: "$_id.size",
-          totalStock: 1, // Exibir a quantidade total de estoque
+          totalStock: 1,
         }
       }
     ]);
