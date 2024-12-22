@@ -23,6 +23,12 @@ export class Sale {
 
   @Prop({ required: true })
   products: Product[];
+
+  @Prop({ required: false })
+  totalAmount: number;
+
+  @Prop({ required: false })
+  saleDate: Date;
 }
 
 export const SaleSchema = SchemaFactory.createForClass(Sale);
