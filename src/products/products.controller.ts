@@ -16,6 +16,11 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Product> {
+    return await this.productsService.findById(id);
+  }
+
   @Patch(':id')
   async updateProduct(@Param('id') id: string, @Body() updateDto: Partial<Product>): Promise<Product> {
     return this.productsService.updateProduct(id, updateDto);

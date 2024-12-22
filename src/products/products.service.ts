@@ -18,6 +18,14 @@ export class ProductsService {
     return this.productModel.find().exec();
   }
 
+  async findById(productId: string): Promise<Product | null> {
+    const product = await this.productModel.findById(productId).exec();
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    return product;
+  }
+
   async filterProducts(filters: any): Promise<Product[]> {
     return this.productModel.find(filters).exec();
   }
