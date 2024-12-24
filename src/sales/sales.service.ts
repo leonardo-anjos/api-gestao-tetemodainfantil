@@ -131,4 +131,17 @@ export class SalesService {
       },
     ]);
   }
+
+  async hasPurchasedBefore(buyerPhone: string): Promise<{ buyerPhone: string, buyerName: string } | null> {
+    const sale = await this.saleModel.findOne({ buyerPhone }).select('buyerPhone buyerName').exec();
+
+    if (sale) {
+      return {
+        buyerPhone: sale.buyerPhone,
+        buyerName: sale.buyerName,
+      };
+    }
+
+    return null;
+  }
 }

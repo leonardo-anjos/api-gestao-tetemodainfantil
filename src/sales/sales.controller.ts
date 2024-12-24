@@ -39,4 +39,9 @@ export class SalesController {
   async getSalesByPaymentType() {
     return this.salesService.getSalesByPaymentType();
   }
+
+  @Get('check/:buyerPhone')
+  async checkBuyerPhone(@Param('buyerPhone') buyerPhone: string) {
+    return await this.salesService.hasPurchasedBefore(buyerPhone);
+  }
 }
